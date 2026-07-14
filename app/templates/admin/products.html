@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Products</h2>
+  <a href="{{ url_for('admin.add_product') }}" class="btn btn-primary-brand">+ Add Product</a>
+</div>
+
+<form method="get" class="mb-3 d-flex gap-2" style="max-width:400px;">
+  <input type="text" name="q" class="form-control form-control-brand" placeholder="Search products..." value="{{ q }}">
+  <button class="btn btn-outline-brand">Search</button>
+</form>
+
+<div class="card-brand p-3">
+  <div class="table-responsive">
+  <table class="table table-brand align-middle">
+    <thead><tr><th>Image</th><th>Name</th><th>SKU</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td><img src="{{ url_for('static', filename=p.primary_image) }}" style="width:44px;height:44px;object-fit:cover;" class="rounded"></td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.sku }}</td>
+        <td>{{ p.category.name }}</td>
+        <td>₹{{ "%.0f"|format(p.final_price) }}{% if p.discount_percent %} <small class="text-muted">(-{{ p.discount_percent }}%)</small>{% endif %}</td>
+        <td>{{ p.stock }}</td>
+        <td>{% if p.is_available %}<span class="badge bg-success">Live</span>{% else %}<span class="badge bg-secondary">Hidden</span>{% endif %}</td>
+        <td>
+          <a href="{{ url_for('admin.edit_product', product_id=p.id) }}" class="btn btn-sm btn-outline-brand">Edit</a>
+          <form action="{{ url_for('admin.delete_product', product_id=p.id) }}" method="post" class="d-inline" onsubmit="return confirm('Delete this product?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-muted">No products yet. Add your first product!</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

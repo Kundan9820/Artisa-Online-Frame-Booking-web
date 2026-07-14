@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h1 class="display-1 text-brand-brass">404</h1>
+  <h3>This frame isn't hanging here.</h3>
+  <p class="text-muted">The page you're looking for doesn't exist or may have moved.</p>
+  <a href="{{ url_for('main.home') }}" class="btn btn-primary-brand">Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-value">{{ today_orders }}</div><div class="stat-label">Today's Orders</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-value">₹{{ "%.0f"|format(total_sales) }}</div><div class="stat-label">Total Sales</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-value">{{ total_products }}</div><div class="stat-label">Products</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-value">{{ total_customers }}</div><div class="stat-label">Customers</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-value">{{ total_categories }}</div><div class="stat-label">Categories</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-value">{{ pending_orders }}</div><div class="stat-label">Pending Orders</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-value">{{ completed_orders }}</div><div class="stat-label">Completed Orders</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card"><div class="stat-value">{{ low_stock|length }}</div><div class="stat-label">Low Stock Items</div></div></div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-8">
+    <div class="card-brand p-3">
+      <h5>Sales — Last 30 Days</h5>
+      <canvas id="salesChart" height="90"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card-brand p-3 h-100">
+      <h5>Orders by Status</h5>
+      <canvas id="statusChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-5">
+    <div class="card-brand p-3">
+      <h5>Monthly Revenue</h5>
+      <canvas id="revenueChart"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card-brand p-3">
+      <h5>Top Products (Units Sold)</h5>
+      <canvas id="topProductsChart"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-3">
+    <div class="card-brand p-3">
+      <h5>New Customers / Month</h5>
+      <canvas id="signupsChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card-brand p-3">
+      <h5>Recent Orders</h5>
+      <table class="table table-brand table-sm">
+        <thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for o in recent_orders %}
+          <tr>
+            <td><a href="{{ url_for('admin.order_detail', order_id=o.id) }}">{{ o.order_number }}</a></td>
+            <td>{{ o.customer_name }}</td>
+            <td>₹{{ "%.0f"|format(o.total_amount) }}</td>
+            <td><span class="status-pill {{ o.status }}">{{ o.status }}</span></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-muted">No orders yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if low_stock %}
+    <div class="card-brand p-3 mt-3">
+      <h5><i class="bi bi-exclamation-triangle text-warning me-1"></i>Low Stock Alerts</h5>
+      <ul class="mb-0">
+        {% for p in low_stock %}
+        <li>{{ p.name }} — only {{ p.stock }} left <a href="{{ url_for('admin.edit_product', product_id=p.id) }}">(restock)</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card-brand p-3">
+      <h5>Recent Activity</h5>
+      <ul class="list-unstyled small">
+        {% for n in recent_activity %}
+        <li class="mb-2 border-bottom pb-2">{{ n.message }}<br><span class="text-muted">{{ n.created_at.strftime('%d %b, %I:%M %p') }}</span></li>
+        {% else %}
+        <li class="text-muted">No recent activity.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+  var brandTeal = "#1F4741";
+  var brandBrass = "#B08D57";
+  var brandClay = "#B5522F";
+  var brandWalnut = "#55483A";
+  var palette = ["#1F4741", "#B08D57", "#B5522F", "#7A5A17", "#55483A", "#8C6A4A", "#3D6E64"];
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.color = "#55483A";
+
+  // Sales — last 30 days (line, dual axis: revenue + order count)
+  new Chart(document.getElementById("salesChart"), {
+    type: "line",
+    data: {
+      labels: {{ analytics.sales_labels|tojson }},
+      datasets: [
+        {
+          label: "Revenue (₹)",
+          data: {{ analytics.sales_revenue|tojson }},
+          borderColor: brandTeal,
+          backgroundColor: "rgba(31,71,65,0.08)",
+          fill: true,
+          tension: 0.3,
+          yAxisID: "y",
+        },
+        {
+          label: "Orders",
+          data: {{ analytics.sales_order_counts|tojson }},
+          borderColor: brandBrass,
+          backgroundColor: "transparent",
+          borderDash: [4, 3],
+          tension: 0.3,
+          yAxisID: "y1",
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: "index", intersect: false },
+      scales: {
+        y: { position: "left", title: { display: true, text: "Revenue (₹)" } },
+        y1: { position: "right", title: { display: true, text: "Orders" }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+
+  // Orders by status (doughnut)
+  new Chart(document.getElementById("statusChart"), {
+    type: "doughnut",
+    data: {
+      labels: {{ analytics.status_labels|tojson }},
+      datasets: [{ data: {{ analytics.status_values|tojson }}, backgroundColor: palette }]
+    },
+    options: { responsive: true, plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 10 } } } } }
+  });
+
+  // Monthly revenue (bar)
+  new Chart(document.getElementById("revenueChart"), {
+    type: "bar",
+    data: {
+      labels: {{ analytics.revenue_labels|tojson }},
+      datasets: [{ label: "Revenue (₹)", data: {{ analytics.revenue_values|tojson }}, backgroundColor: brandTeal, borderRadius: 4 }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+
+  // Top products (horizontal bar)
+  new Chart(document.getElementById("topProductsChart"), {
+    type: "bar",
+    data: {
+      labels: {{ analytics.top_product_labels|tojson }},
+      datasets: [{ label: "Units Sold", data: {{ analytics.top_product_values|tojson }}, backgroundColor: brandBrass, borderRadius: 4 }]
+    },
+    options: { indexAxis: "y", responsive: true, plugins: { legend: { display: false } } }
+  });
+
+  // New customer signups (bar)
+  new Chart(document.getElementById("signupsChart"), {
+    type: "bar",
+    data: {
+      labels: {{ analytics.signup_labels|tojson }},
+      datasets: [{ label: "New Customers", data: {{ analytics.signup_values|tojson }}, backgroundColor: brandClay, borderRadius: 4 }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+})();
+</script>
+{% endblock %}

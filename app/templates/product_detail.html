@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('main.home') }}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('main.category', slug=product.category.slug) }}">{{ product.category.name }}</a></li>
+      <li class="breadcrumb-item active">{{ product.name }}</li>
+    </ol>
+  </nav>
+
+  <div class="row g-5">
+    <div class="col-md-6">
+      <div class="card-brand p-2 mb-2">
+        <img id="product-main-image" src="{{ url_for('static', filename=product.primary_image) }}" class="w-100" style="aspect-ratio:1/1; object-fit:cover;" alt="{{ product.name }}">
+      </div>
+      {% if product.images|length > 1 %}
+      <div class="d-flex gap-2">
+        {% for img in product.images %}
+        <img data-thumb="{{ url_for('static', filename=img.image_path) }}" src="{{ url_for('static', filename=img.image_path) }}" class="border {{ 'border-brand-active' if loop.first }}" style="width:70px;height:70px;object-fit:cover;cursor:pointer;">
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      <span class="eyebrow">{{ product.category.name }}{% if product.subcategory %} · {{ product.subcategory }}{% endif %}</span>
+      <h1 class="mt-1" style="font-size:1.9rem;">{{ product.name }}</h1>
+      <div class="stars mb-2">
+        {% if product.average_rating %}
+          {{ "★" * (product.average_rating|round|int) }}{{ "☆" * (5 - (product.average_rating|round|int)) }}
+          <span class="text-muted">({{ reviews|length }} reviews)</span>
+        {% else %}
+          <span class="text-muted">No reviews yet</span>
+        {% endif %}
+      </div>
+
+      <div class="d-flex align-items-baseline gap-3 mb-3">
+        <span class="fs-3 fw-bold text-brand-teal">₹{{ "%.0f"|format(product.final_price) }}</span>
+        {% if product.discount_percent %}
+        <span class="text-decoration-line-through text-muted">₹{{ "%.0f"|format(product.price) }}</span>
+        <span class="badge" style="background:var(--clay);">{{ product.discount_percent }}% OFF</span>
+        {% endif %}
+      </div>
+
+      <p>{{ product.description }}</p>
+
+      <ul class="list-unstyled small text-muted mb-3">
+        <li><strong>SKU:</strong> {{ product.sku }}</li>
+        {% if product.frame_material %}<li><strong>Material:</strong> {{ product.frame_material }}</li>{% endif %}
+        {% if product.frame_color %}<li><strong>Color:</strong> {{ product.frame_color }}</li>{% endif %}
+        <li><strong>Delivery:</strong> {{ product.delivery_time_days }}</li>
+        <li><strong>Availability:</strong> {{ "In Stock" if product.stock > 0 else "Out of Stock" }}</li>
+      </ul>
+
+      <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="post" class="card-brand p-3">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% if product.sizes %}
+        <div class="mb-3">
+          <label class="form-label">Size</label>
+          <select name="size_label" class="form-select form-select-brand">
+            {% for s in product.sizes %}<option value="{{ s.label }}">{{ s.label }}</option>{% endfor %}
+          </select>
+        </div>
+        {% endif %}
+        <div class="mb-3">
+          <label class="form-label">Quantity</label>
+          <div class="d-flex" style="max-width:150px;">
+            <button type="button" class="btn btn-outline-brand" data-qty-decrease="qtyInput">-</button>
+            <input id="qtyInput" type="number" name="quantity" value="1" min="1" class="form-control form-control-brand text-center mx-2">
+            <button type="button" class="btn btn-outline-brand" data-qty-increase="qtyInput">+</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary-brand w-100" {{ "disabled" if product.stock <= 0 }}>
+          <i class="bi bi-bag-plus me-1"></i>Add to Cart
+        </button>
+        {% if product.is_customizable %}
+        <a href="{{ url_for('custom_frame.custom_order') }}" class="btn btn-outline-brand w-100 mt-2">Customize This Frame</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <!-- Reviews -->
+  <div class="mt-5">
+    <div class="section-title"><h2>Customer Reviews</h2></div>
+    <div class="row g-3 mb-4">
+      {% for r in reviews %}
+      <div class="col-md-6">
+        <div class="card-brand p-3">
+          <div class="stars">{{ "★" * r.rating }}{{ "☆" * (5 - r.rating) }}</div>
+          <p class="mb-1 mt-1">{{ r.comment }}</p>
+          {% if r.image %}<img src="{{ url_for('static', filename=r.image) }}" style="width:80px;height:80px;object-fit:cover;" class="rounded mb-1">{% endif %}
+          <small class="text-muted">— {{ r.user.full_name }}</small>
+        </div>
+      </div>
+      {% else %}
+      <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+      {% endfor %}
+    </div>
+
+    <div class="card-brand p-4" style="max-width:600px;">
+      <h5>Write a Review</h5>
+      <form action="{{ url_for('main.submit_review', slug=product.slug) }}" method="post" enctype="multipart/form-data">
+        {{ review_form.hidden_tag() }}
+        <div class="mb-3">
+          {{ review_form.rating.label(class_="form-label") }}
+          {{ review_form.rating(class_="form-select form-select-brand") }}
+        </div>
+        <div class="mb-3">
+          {{ review_form.comment.label(class_="form-label") }}
+          {{ review_form.comment(class_="form-control form-control-brand", rows=3) }}
+        </div>
+        <div class="mb-3">
+          {{ review_form.image.label(class_="form-label") }}
+          {{ review_form.image(class_="form-control form-control-brand") }}
+        </div>
+        <button type="submit" class="btn btn-primary-brand">Submit Review</button>
+      </form>
+    </div>
+  </div>
+
+  {% if related %}
+  <div class="mt-5">
+    <div class="section-title"><h2>Related Products</h2></div>
+    <div class="row g-4">
+      {% for p in related %}
+      <div class="col-6 col-md-3">{% include "_product_card.html" %}</div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

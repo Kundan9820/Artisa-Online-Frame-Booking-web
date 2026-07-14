@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Coupons</h2>
+  <a href="{{ url_for('admin.add_coupon') }}" class="btn btn-primary-brand">+ Add Coupon</a>
+</div>
+<div class="card-brand p-3">
+  <table class="table table-brand">
+    <thead><tr><th>Code</th><th>Discount</th><th>Min Order</th><th>Used</th><th>Active</th><th></th></tr></thead>
+    <tbody>
+      {% for c in coupons %}
+      <tr>
+        <td><strong>{{ c.code }}</strong></td>
+        <td>{{ c.discount_percent }}%{% if c.max_discount_amount %} (max ₹{{ "%.0f"|format(c.max_discount_amount) }}){% endif %}</td>
+        <td>₹{{ "%.0f"|format(c.min_order_amount or 0) }}</td>
+        <td>{{ c.times_used }}{% if c.usage_limit %} / {{ c.usage_limit }}{% endif %}</td>
+        <td>{% if c.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+        <td>
+          <form action="{{ url_for('admin.delete_coupon', coupon_id=c.id) }}" method="post" onsubmit="return confirm('Delete this coupon?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-muted">No coupons yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

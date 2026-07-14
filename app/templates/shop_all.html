@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Shop All Frames — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="section-title frame-corner"><h2>Shop All Frames</h2></div>
+
+  <div class="row">
+    <div class="col-lg-3 mb-4">
+      <div class="card-brand p-3">
+        <h5 class="mb-3">Filters</h5>
+        <form method="get">
+          <label class="form-label small">Category</label>
+          <select name="category_id" class="form-select form-select-brand form-select-sm mb-3">
+            <option value="">All Categories</option>
+            {% for c in all_categories %}
+            <option value="{{ c.id }}" {{ "selected" if request.args.get('category_id', type=int) == c.id }}>{{ c.name }}</option>
+            {% endfor %}
+          </select>
+          <label class="form-label small">Price Range</label>
+          <div class="d-flex gap-2 mb-3">
+            <input type="number" name="min_price" class="form-control form-control-brand form-control-sm" placeholder="Min" value="{{ request.args.get('min_price', '') }}">
+            <input type="number" name="max_price" class="form-control form-control-brand form-control-sm" placeholder="Max" value="{{ request.args.get('max_price', '') }}">
+          </div>
+          <label class="form-label small">Frame Color</label>
+          <input type="text" name="color" class="form-control form-control-brand form-control-sm mb-3" placeholder="e.g. Brown" value="{{ request.args.get('color', '') }}">
+          <label class="form-label small">Frame Material</label>
+          <input type="text" name="material" class="form-control form-control-brand form-control-sm mb-3" placeholder="e.g. Wooden" value="{{ request.args.get('material', '') }}">
+          <label class="form-label small">Sort By</label>
+          <select name="sort" class="form-select form-select-brand form-select-sm mb-3">
+            <option value="newest" {{ "selected" if request.args.get("sort") == "newest" }}>Newest</option>
+            <option value="price_low" {{ "selected" if request.args.get("sort") == "price_low" }}>Price: Low to High</option>
+            <option value="price_high" {{ "selected" if request.args.get("sort") == "price_high" }}>Price: High to Low</option>
+            <option value="discount" {{ "selected" if request.args.get("sort") == "discount" }}>Highest Discount</option>
+            <option value="popularity" {{ "selected" if request.args.get("sort") == "popularity" }}>Popularity</option>
+          </select>
+          <button type="submit" class="btn btn-primary-brand w-100 btn-sm">Apply Filters</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      {% if products %}
+      <div class="row g-4">
+        {% for p in products %}
+        <div class="col-6 col-md-4">{% include "_product_card.html" %}</div>
+        {% endfor %}
+      </div>
+
+      {% if pagination.pages > 1 %}
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% for pg in pagination.iter_pages() %}
+            {% if pg %}
+            <li class="page-item {{ 'active' if pg == pagination.page }}">
+              <a class="page-link" href="{{ url_for('main.shop_all', page=pg, **qs_args) }}">{{ pg }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </nav>
+      {% endif %}
+      {% else %}
+      {% with message = "No products match these filters yet." %}{% include "_empty_state.html" %}{% endwith %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

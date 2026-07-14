@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Notifications</h2>
+<div class="card-brand p-3">
+  <ul class="list-unstyled">
+    {% for n in notifications %}
+    <li class="border-bottom py-2">
+      <span class="badge bg-secondary text-uppercase">{{ n.type.replace('_', ' ') }}</span>
+      {{ n.message }}
+      <br><small class="text-muted">{{ n.created_at.strftime('%d %b %Y, %I:%M %p') }}</small>
+    </li>
+    {% else %}
+    <li class="text-muted">No notifications yet.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

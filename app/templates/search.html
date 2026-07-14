@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Search: {{ q }} — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="section-title"><h2>Search Results for "{{ q }}"</h2></div>
+
+  {% if products %}
+  <div class="row g-4">
+    {% for p in products %}
+    <div class="col-6 col-md-3">{% include "_product_card.html" %}</div>
+    {% endfor %}
+  </div>
+  {% if pagination.pages > 1 %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% for pg in pagination.iter_pages() %}
+        {% if pg %}
+        <li class="page-item {{ 'active' if pg == pagination.page }}">
+          <a class="page-link" href="{{ url_for('main.search', q=q, page=pg) }}">{{ pg }}</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+  {% else %}
+  {% with message = "No products found matching your search." %}{% include "_empty_state.html" %}{% endwith %}
+  <p class="text-center text-muted small mt-2">Try a different keyword, or browse our <a href="{{ url_for('main.home') }}">categories</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

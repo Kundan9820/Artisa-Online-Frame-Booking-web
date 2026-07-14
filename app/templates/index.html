@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if sliders %}
+<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {% for s in sliders %}
+    <div class="carousel-item {{ 'active' if loop.first }}">
+      <div class="hero-slide" style="background-image: url('{{ url_for('static', filename=s.image) }}');">
+        <div class="container">
+          <p class="eyebrow text-white mb-2">{{ site.shop_name }}</p>
+          <h1>{{ s.title or "Frame Every Memory, Beautifully" }}</h1>
+          {% if s.subtitle %}<p>{{ s.subtitle }}</p>{% endif %}
+          <a href="{{ s.link_url or url_for('main.search') }}" class="btn btn-brass mt-2">{{ s.button_text }}</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if sliders|length > 1 %}
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+  {% endif %}
+</div>
+{% else %}
+<div class="hero-slide hero-fallback">
+  <div class="container">
+    <p class="eyebrow text-white mb-2">Handcrafted in Hazaribagh</p>
+    <h1>Frame Every Memory, Beautifully</h1>
+    <p>God frames, wedding albums, family portraits and fully customized photo frames — delivered with care.</p>
+    <a href="{{ url_for('main.search') }}" class="btn btn-brass mt-2">Shop Now</a>
+  </div>
+</div>
+{% endif %}
+
+<div class="container py-5">
+
+  <!-- Categories -->
+  <div class="section-title frame-corner">
+    <span class="eyebrow">Browse</span>
+    <h2>Shop by Category</h2>
+    <a href="{{ url_for('main.shop_all') }}" class="btn btn-sm btn-outline-brand">View All Frames</a>
+  </div>
+  <div class="gallery-grid mb-5">
+    {% for cat in categories %}
+    <a href="{{ url_for('main.category', slug=cat.slug) }}" class="category-tile text-decoration-none">
+      <img src="{{ url_for('static', filename=cat.image) if cat.image else url_for('static', filename='img/placeholder-frame.svg') }}" alt="{{ cat.name }}">
+      <div class="cat-name">{{ cat.name }}</div>
+    </a>
+    {% else %}
+    <p class="text-muted">Categories will appear here once added from the admin panel.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Featured -->
+  {% if featured %}
+  <div class="section-title">
+    <span class="eyebrow">Handpicked</span>
+    <h2>Featured Products</h2>
+  </div>
+  <div class="row g-4 mb-5">
+    {% for p in featured %}
+    <div class="col-6 col-md-4 col-lg-3">{% include "_product_card.html" %}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- New Arrivals -->
+  {% if new_arrivals %}
+  <div class="section-title">
+    <span class="eyebrow">Just In</span>
+    <h2>New Arrivals</h2>
+  </div>
+  <div class="row g-4 mb-5">
+    {% for p in new_arrivals %}
+    <div class="col-6 col-md-4 col-lg-3">{% include "_product_card.html" %}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Best Sellers -->
+  {% if best_sellers %}
+  <div class="section-title">
+    <span class="eyebrow">Customer Favorites</span>
+    <h2>Best Sellers</h2>
+  </div>
+  <div class="row g-4 mb-5">
+    {% for p in best_sellers %}
+    <div class="col-6 col-md-4 col-lg-3">{% include "_product_card.html" %}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Custom Frame CTA -->
+  <div class="card-brand p-4 p-md-5 mb-5 frame-corner" style="background: var(--teal); color: var(--ivory);">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <span class="eyebrow" style="color: var(--brass-light);">Your Photo, Our Craft</span>
+        <h2 class="mt-2" style="color: var(--ivory);">Turn Any Photo Into a Custom Frame</h2>
+        <p class="mb-0" style="color: var(--plaster-deep);">Upload your favorite photo, choose the style, size and color — we'll frame it and confirm your order over WhatsApp.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('custom_frame.custom_order') }}" class="btn btn-brass btn-lg">Create Custom Frame</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  {% if testimonials %}
+  <div class="section-title">
+    <span class="eyebrow">Trusted By</span>
+    <h2>What Our Customers Say</h2>
+  </div>
+  <div class="row g-4 mb-5">
+    {% for t in testimonials %}
+    <div class="col-md-4">
+      <div class="testimonial-card">
+        <div class="quote-mark">&ldquo;</div>
+        <p>{{ t.comment }}</p>
+        <div class="d-flex align-items-center gap-2 mt-3">
+          {% if t.image %}<img src="{{ url_for('static', filename=t.image) }}" class="rounded-circle" width="40" height="40" style="object-fit:cover;">{% endif %}
+          <div>
+            <strong>{{ t.customer_name }}</strong><br>
+            <span class="stars">{{ "★" * t.rating }}{{ "☆" * (5 - t.rating) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Instagram Gallery -->
+  <div class="section-title">
+    <span class="eyebrow">Follow Along</span>
+    <h2>Instagram Gallery</h2>
+  </div>
+  <div class="card-brand p-4 text-center">
+    <p class="mb-2">See our latest work and happy customers on Instagram.</p>
+    <a href="{{ site.instagram_url }}" target="_blank" rel="noopener" class="btn btn-outline-brand"><i class="bi bi-instagram me-1"></i>Visit Our Instagram</a>
+  </div>
+
+</div>
+{% endblock %}

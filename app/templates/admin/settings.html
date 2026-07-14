@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Website Settings</h2>
+<div class="card-brand p-4" style="max-width:600px;">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-3">
+      <label class="form-label">Shop Name</label>
+      <input type="text" name="shop_name" class="form-control form-control-brand" value="{{ settings.shop_name }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Tagline</label>
+      <input type="text" name="shop_tagline" class="form-control form-control-brand" value="{{ settings.shop_tagline }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">WhatsApp Number (with country code, no + or spaces)</label>
+      <input type="text" name="whatsapp_number" class="form-control form-control-brand" value="{{ settings.whatsapp_number }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Instagram URL</label>
+      <input type="text" name="instagram_url" class="form-control form-control-brand" value="{{ settings.instagram_url }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Address</label>
+      <textarea name="address" class="form-control form-control-brand" rows="2">{{ settings.address }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Business Hours</label>
+      <input type="text" name="business_hours" class="form-control form-control-brand" value="{{ settings.business_hours }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Delivery Charge (Rs.)</label>
+      <input type="number" name="delivery_charge" class="form-control form-control-brand" value="{{ settings.delivery_charge }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Free Delivery Above (Rs.)</label>
+      <input type="number" name="free_delivery_above" class="form-control form-control-brand" value="{{ settings.free_delivery_above }}">
+    </div>
+    <button type="submit" class="btn btn-primary-brand">Save Settings</button>
+  </form>
+</div>
+{% endblock %}

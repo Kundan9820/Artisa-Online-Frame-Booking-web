@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#E3D9C4"/>
+  <rect x="40" y="40" width="320" height="320" fill="none" stroke="#B08D57" stroke-width="8"/>
+  <rect x="70" y="70" width="260" height="260" fill="#FBF8F2" stroke="#2A2118" stroke-width="2"/>
+  <text x="200" y="205" font-family="Georgia, serif" font-size="20" fill="#55483A" text-anchor="middle">Artista Frame</text>
+</svg>

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Add Address — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="card-brand p-4 mx-auto" style="max-width:600px;">
+    <h4 class="mb-3">Add Delivery Address</h4>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div class="row g-3">
+        <div class="col-md-6">{{ form.full_name.label(class_="form-label") }}{{ form.full_name(class_="form-control form-control-brand") }}</div>
+        <div class="col-md-6">{{ form.mobile.label(class_="form-label") }}{{ form.mobile(class_="form-control form-control-brand") }}</div>
+        <div class="col-12">{{ form.email.label(class_="form-label") }}{{ form.email(class_="form-control form-control-brand") }}</div>
+        <div class="col-12">{{ form.address_line.label(class_="form-label") }}{{ form.address_line(class_="form-control form-control-brand", rows=2) }}</div>
+        <div class="col-md-4">{{ form.city.label(class_="form-label") }}{{ form.city(class_="form-control form-control-brand") }}</div>
+        <div class="col-md-4">{{ form.state.label(class_="form-label") }}{{ form.state(class_="form-control form-control-brand") }}</div>
+        <div class="col-md-4">{{ form.pincode.label(class_="form-label") }}{{ form.pincode(class_="form-control form-control-brand") }}</div>
+        <div class="col-md-8">{{ form.landmark.label(class_="form-label") }}{{ form.landmark(class_="form-control form-control-brand") }}</div>
+        <div class="col-md-4 d-flex align-items-end">
+          <div class="form-check">{{ form.is_default(class_="form-check-input") }}{{ form.is_default.label(class_="form-check-label") }}</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary-brand w-100 mt-4">Save Address</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

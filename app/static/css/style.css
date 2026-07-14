@@ -1,0 +1,473 @@
+/* =========================================================================
+   ARTISTA FRAME — Design System
+   Palette:  --plaster (bg), --walnut (ink/text), --teal (primary accent),
+             --brass (secondary/premium accent), --clay (warm highlight)
+   Type:     Fraunces (display, used sparingly) + Inter (body/UI)
+   Signature: the mitred picture-frame corner joint used as a structural
+              motif for dividers, card corners and the loading mark.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --plaster: #EDE6D6;
+  --plaster-deep: #E3D9C4;
+  --walnut: #2A2118;
+  --walnut-soft: #55483A;
+  --teal: #1F4741;
+  --teal-deep: #163430;
+  --brass: #B08D57;
+  --brass-light: #D4B483;
+  --clay: #B5522F;
+  --ivory: #FBF8F2;
+  --line: rgba(42, 33, 24, 0.14);
+
+  --radius: 4px;
+  --shadow-soft: 0 8px 24px rgba(42, 33, 24, 0.10);
+  --shadow-lift: 0 16px 40px rgba(42, 33, 24, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--plaster);
+  color: var(--walnut);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .display-font {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  color: var(--walnut);
+  letter-spacing: -0.01em;
+}
+
+a { color: var(--teal); text-decoration: none; }
+a:hover { color: var(--teal-deep); }
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+.eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.btn-primary-brand {
+  background: var(--teal);
+  color: var(--ivory);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.7rem 1.6rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn-primary-brand:hover { background: var(--teal-deep); color: var(--ivory); transform: translateY(-1px); }
+
+.btn-brass {
+  background: var(--brass);
+  color: var(--walnut);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.7rem 1.6rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn-brass:hover { background: var(--brass-light); color: var(--walnut); transform: translateY(-1px); }
+
+.btn-outline-brand {
+  background: transparent;
+  color: var(--teal);
+  border: 1.5px solid var(--teal);
+  border-radius: var(--radius);
+  padding: 0.65rem 1.5rem;
+  font-weight: 600;
+}
+.btn-outline-brand:hover { background: var(--teal); color: var(--ivory); }
+
+/* -------------------------------------------------------------------- */
+/* Signature motif: mitred frame corner                                  */
+/* -------------------------------------------------------------------- */
+.frame-corner { position: relative; }
+.frame-corner::before,
+.frame-corner::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-top: 2px solid var(--brass);
+  border-left: 2px solid var(--brass);
+  top: -6px;
+  left: -6px;
+}
+.frame-corner::after {
+  top: auto;
+  left: auto;
+  bottom: -6px;
+  right: -6px;
+  border-top: none;
+  border-left: none;
+  border-bottom: 2px solid var(--brass);
+  border-right: 2px solid var(--brass);
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+.section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.section-title h2 { margin: 0; font-size: 1.85rem; }
+
+/* -------------------------------------------------------------------- */
+/* Header                                                                */
+/* -------------------------------------------------------------------- */
+.top-strip {
+  background: var(--walnut);
+  color: var(--plaster-deep);
+  font-size: 0.8rem;
+  padding: 0.4rem 0;
+}
+.top-strip a { color: var(--brass-light); }
+
+.site-header {
+  background: var(--ivory);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brand-mark {
+  font-family: 'Fraunces', serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--walnut);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.brand-mark .frame-icon {
+  width: 30px; height: 30px;
+  border: 3px solid var(--teal);
+  border-radius: 3px;
+  position: relative;
+  flex-shrink: 0;
+}
+.brand-mark .frame-icon::after {
+  content: "";
+  position: absolute; inset: 5px;
+  border: 2px solid var(--brass);
+}
+
+.nav-link-brand {
+  color: var(--walnut) !important;
+  font-weight: 500;
+  padding: 0.5rem 0.9rem !important;
+}
+.nav-link-brand:hover { color: var(--teal) !important; }
+
+.search-bar-brand {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.search-bar-brand input {
+  border: none;
+  padding: 0.55rem 1rem;
+}
+.search-bar-brand input:focus { outline: none; box-shadow: none; }
+.search-bar-brand button {
+  background: var(--teal);
+  color: var(--ivory);
+  border: none;
+  padding: 0 1.1rem;
+}
+
+.icon-link {
+  color: var(--walnut);
+  position: relative;
+  font-size: 1.2rem;
+}
+.icon-link .badge-count {
+  position: absolute;
+  top: -6px; right: -10px;
+  background: var(--clay);
+  color: #fff;
+  font-size: 0.62rem;
+  min-width: 17px; height: 17px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------------------- */
+/* Hero                                                                  */
+/* -------------------------------------------------------------------- */
+.hero-slide {
+  background-size: cover;
+  background-position: center;
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.hero-slide::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(42,33,24,0.72) 0%, rgba(42,33,24,0.25) 60%, rgba(42,33,24,0.05) 100%);
+}
+.hero-slide .container { position: relative; z-index: 2; }
+.hero-slide h1 { color: var(--ivory); font-size: 2.75rem; max-width: 600px; }
+.hero-slide p { color: var(--plaster-deep); font-size: 1.1rem; max-width: 520px; }
+
+.hero-fallback {
+  background: linear-gradient(120deg, var(--teal-deep), var(--teal) 60%, var(--brass) 130%);
+}
+
+/* -------------------------------------------------------------------- */
+/* Category tiles (gallery-wall grid)                                    */
+/* -------------------------------------------------------------------- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.1rem;
+}
+.category-tile {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.1rem 0.75rem;
+  text-align: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.category-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+  border-color: var(--brass);
+}
+.category-tile img {
+  width: 64px; height: 64px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--brass);
+  margin-bottom: 0.6rem;
+}
+.category-tile .cat-name { font-weight: 600; font-size: 0.9rem; color: var(--walnut); }
+
+/* -------------------------------------------------------------------- */
+/* Product cards                                                        */
+/* -------------------------------------------------------------------- */
+.product-card {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 100%;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  position: relative;
+}
+.product-card:hover { box-shadow: var(--shadow-lift); transform: translateY(-3px); }
+
+.product-card .img-wrap {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--plaster-deep);
+  position: relative;
+}
+.product-card .img-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.product-card:hover .img-wrap img { transform: scale(1.06); }
+
+.badge-discount {
+  position: absolute; top: 10px; left: 10px;
+  background: var(--clay); color: #fff;
+  font-size: 0.72rem; font-weight: 700;
+  padding: 0.25rem 0.55rem; border-radius: 3px;
+}
+.badge-new {
+  position: absolute; top: 10px; right: 10px;
+  background: var(--teal); color: #fff;
+  font-size: 0.68rem; font-weight: 700;
+  padding: 0.25rem 0.5rem; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+.product-card .body { padding: 0.95rem 1rem 1.1rem; }
+.product-card .p-name {
+  font-size: 0.95rem; font-weight: 600; color: var(--walnut);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  min-height: 2.6em;
+}
+.product-card .price-row { display: flex; align-items: baseline; gap: 0.5rem; margin: 0.35rem 0; }
+.product-card .price-now { font-weight: 700; color: var(--teal); font-size: 1.05rem; }
+.product-card .price-old { text-decoration: line-through; color: var(--walnut-soft); font-size: 0.82rem; }
+.product-card .stars { color: var(--brass); font-size: 0.82rem; }
+
+.wishlist-btn {
+  position: absolute; bottom: 10px; right: 10px;
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--clay);
+  opacity: 0; transition: opacity 0.15s ease;
+}
+.product-card:hover .wishlist-btn { opacity: 1; }
+
+/* -------------------------------------------------------------------- */
+/* Buttons/forms shared                                                  */
+/* -------------------------------------------------------------------- */
+.form-control-brand, .form-select-brand {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.85rem;
+}
+.form-control-brand:focus, .form-select-brand:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(31,71,65,0.12);
+}
+.card-brand {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* -------------------------------------------------------------------- */
+/* Floating WhatsApp button                                              */
+/* -------------------------------------------------------------------- */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 1200;
+  background: #25D366;
+  color: #fff;
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.7rem;
+  box-shadow: 0 8px 22px rgba(37,211,102,0.45);
+  transition: transform 0.15s ease;
+}
+.whatsapp-float:hover { transform: scale(1.08); color: #fff; }
+
+/* -------------------------------------------------------------------- */
+/* Footer                                                                */
+/* -------------------------------------------------------------------- */
+.site-footer {
+  background: var(--walnut);
+  color: var(--plaster-deep);
+  padding: 3.5rem 0 1.5rem;
+}
+.site-footer h5 { color: var(--brass-light); font-family: 'Fraunces', serif; }
+.site-footer a { color: var(--plaster-deep); }
+.site-footer a:hover { color: var(--brass-light); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 2.2rem;
+  padding-top: 1.2rem;
+  font-size: 0.85rem;
+  color: rgba(237,230,214,0.65);
+}
+
+/* -------------------------------------------------------------------- */
+/* Testimonials                                                          */
+/* -------------------------------------------------------------------- */
+.testimonial-card {
+  background: var(--ivory);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  padding: 1.6rem;
+  height: 100%;
+}
+.testimonial-card .quote-mark {
+  font-family: 'Fraunces', serif;
+  font-size: 2.5rem;
+  color: var(--brass);
+  line-height: 1;
+}
+
+/* -------------------------------------------------------------------- */
+/* Admin panel                                                           */
+/* -------------------------------------------------------------------- */
+.admin-body { background: #F5F2EC; }
+.admin-sidebar {
+  background: var(--walnut);
+  min-height: 100vh;
+  color: var(--plaster-deep);
+}
+.admin-sidebar a {
+  color: var(--plaster-deep);
+  display: block;
+  padding: 0.65rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+.admin-sidebar a:hover, .admin-sidebar a.active {
+  background: rgba(176,141,87,0.18);
+  color: var(--brass-light);
+}
+.stat-card {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.3rem 1.4rem;
+}
+.stat-card .stat-value { font-family: 'Fraunces', serif; font-size: 1.9rem; font-weight: 600; }
+.stat-card .stat-label { font-size: 0.8rem; color: var(--walnut-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+
+table.table-brand thead { background: var(--plaster-deep); }
+.status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--plaster-deep);
+  color: var(--walnut);
+}
+.status-pill.Delivered { background: #DCEFE9; color: var(--teal-deep); }
+.status-pill.Cancelled { background: #F5DCD6; color: var(--clay); }
+.status-pill.Pending { background: #F3E6C8; color: #7A5A17; }
+
+.footer-bottom a:hover {
+  opacity: 1 !important;
+  color: var(--brass-light) !important;
+}
+
+/* -------------------------------------------------------------------- */
+/* Utility                                                               */
+/* -------------------------------------------------------------------- */
+.text-brand-teal { color: var(--teal); }
+.text-brand-brass { color: var(--brass); }
+.bg-plaster { background: var(--plaster); }
+.bg-ivory { background: var(--ivory); }
+
+@media (max-width: 767px) {
+  .hero-slide h1 { font-size: 1.9rem; }
+  .hero-slide { min-height: 360px; }
+}

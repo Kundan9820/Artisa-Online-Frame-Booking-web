@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Custom Photo Frame Requests</h2>
+
+<div class="row g-4">
+  {% for u in uploads %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card-brand p-3">
+      <img src="{{ url_for('static', filename=u.file_path) }}" style="width:100%; aspect-ratio:1/1; object-fit:cover;" class="rounded mb-2">
+      <p class="mb-1"><strong>{{ u.customer_name }}</strong> — {{ u.customer_mobile }}</p>
+      <p class="small text-muted mb-1">{{ u.frame_style }} · {{ u.frame_color }} · {{ u.frame_size }} · {{ u.orientation }} · Qty {{ u.quantity }}</p>
+      {% if u.special_instructions %}<p class="small">Note: {{ u.special_instructions }}</p>{% endif %}
+      <a href="{{ url_for('static', filename=u.file_path) }}" download class="btn btn-sm btn-outline-brand mb-2">Download Photo</a>
+      <form action="{{ url_for('admin.update_custom_status', photo_id=u.id) }}" method="post" class="d-flex gap-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <select name="status" class="form-select form-select-brand form-select-sm">
+          {% for s in ["New", "Reviewed", "In Production", "Fulfilled"] %}
+          <option value="{{ s }}" {{ "selected" if u.status == s }}>{{ s }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-sm btn-primary-brand">Save</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <p class="text-muted">No custom frame requests yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

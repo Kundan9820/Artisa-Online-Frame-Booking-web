@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Verify Email — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="card-brand p-4 mx-auto frame-corner" style="max-width:420px;">
+    <h3 class="mb-3">Verify Your Email</h3>
+    <p class="text-muted small">Enter the 6-digit OTP code shown after registration.</p>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      {{ form.email() }}
+      <div class="mb-3">{{ form.otp.label(class_="form-label") }}{{ form.otp(class_="form-control form-control-brand") }}</div>
+      <button type="submit" class="btn btn-primary-brand w-100">Verify</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

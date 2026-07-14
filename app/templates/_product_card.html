@@ -1,0 +1,27 @@
+<div class="product-card">
+  <a href="{{ url_for('main.product_detail', slug=p.slug) }}" class="text-decoration-none">
+    <div class="img-wrap">
+      {% if p.discount_percent %}<span class="badge-discount">-{{ p.discount_percent }}%</span>{% endif %}
+      {% if p.is_new_arrival %}<span class="badge-new">New</span>{% endif %}
+      <img src="{{ url_for('static', filename=p.primary_image) }}" alt="{{ p.name }}" loading="lazy">
+    </div>
+  </a>
+  {% if current_user.is_authenticated %}
+  <form action="{{ url_for('auth.toggle_wishlist', product_id=p.id) }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="wishlist-btn" title="Add to wishlist"><i class="bi bi-heart"></i></button>
+  </form>
+  {% endif %}
+  <div class="body">
+    <a href="{{ url_for('main.product_detail', slug=p.slug) }}" class="text-decoration-none">
+      <div class="p-name">{{ p.name }}</div>
+    </a>
+    <div class="price-row">
+      <span class="price-now">₹{{ "%.0f"|format(p.final_price) }}</span>
+      {% if p.discount_percent %}<span class="price-old">₹{{ "%.0f"|format(p.price) }}</span>{% endif %}
+    </div>
+    {% if p.average_rating %}
+    <div class="stars">{{ "★" * (p.average_rating|round|int) }}{{ "☆" * (5 - (p.average_rating|round|int)) }} <span class="text-muted">({{ p.reviews|selectattr("is_approved")|list|length }})</span></div>
+    {% endif %}
+  </div>
+</div>

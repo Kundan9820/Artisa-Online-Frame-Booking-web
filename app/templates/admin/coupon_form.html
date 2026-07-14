@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Add Coupon</h2>
+<div class="card-brand p-4" style="max-width:500px;">
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.code.label(class_="form-label") }}{{ form.code(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.discount_percent.label(class_="form-label") }}{{ form.discount_percent(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.max_discount_amount.label(class_="form-label") }}{{ form.max_discount_amount(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.min_order_amount.label(class_="form-label") }}{{ form.min_order_amount(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.usage_limit.label(class_="form-label") }}{{ form.usage_limit(class_="form-control form-control-brand") }}</div>
+    <div class="form-check mb-3">{{ form.is_active(class_="form-check-input") }}{{ form.is_active.label(class_="form-check-label") }}</div>
+    <button type="submit" class="btn btn-primary-brand">Create Coupon</button>
+    <a href="{{ url_for('admin.coupons') }}" class="btn btn-outline-brand">Cancel</a>
+  </form>
+</div>
+{% endblock %}

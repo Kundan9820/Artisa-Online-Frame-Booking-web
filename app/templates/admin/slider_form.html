@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Add Homepage Slide</h2>
+<div class="card-brand p-4" style="max-width:600px;">
+  <form method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.image.label(class_="form-label") }}{{ form.image(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.title.label(class_="form-label") }}{{ form.title(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.subtitle.label(class_="form-label") }}{{ form.subtitle(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.link_url.label(class_="form-label") }}{{ form.link_url(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.button_text.label(class_="form-label") }}{{ form.button_text(class_="form-control form-control-brand") }}</div>
+    <div class="form-check mb-3">{{ form.is_active(class_="form-check-input") }}{{ form.is_active.label(class_="form-check-label") }}</div>
+    <button type="submit" class="btn btn-primary-brand">Add Slide</button>
+    <a href="{{ url_for('admin.sliders') }}" class="btn btn-outline-brand">Cancel</a>
+  </form>
+</div>
+{% endblock %}

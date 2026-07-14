@@ -1,0 +1,82 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">{{ "Edit Product" if product else "Add Product" }}</h2>
+<div class="card-brand p-4">
+  <form method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="row g-3">
+      <div class="col-md-6">{{ form.name.label(class_="form-label") }}{{ form.name(class_="form-control form-control-brand") }}</div>
+      <div class="col-md-6">{{ form.sku.label(class_="form-label") }}{{ form.sku(class_="form-control form-control-brand") }}</div>
+      <div class="col-12">{{ form.description.label(class_="form-label") }}{{ form.description(class_="form-control form-control-brand", rows=3) }}</div>
+
+      <div class="col-md-3">{{ form.price.label(class_="form-label") }}{{ form.price(class_="form-control form-control-brand") }}</div>
+      <div class="col-md-3">{{ form.discount_percent.label(class_="form-label") }}{{ form.discount_percent(class_="form-control form-control-brand") }}</div>
+      <div class="col-md-3">{{ form.stock.label(class_="form-label") }}{{ form.stock(class_="form-control form-control-brand") }}</div>
+      <div class="col-md-3">{{ form.category_id.label(class_="form-label") }}{{ form.category_id(class_="form-select form-select-brand") }}</div>
+
+      <div class="col-md-4">{{ form.subcategory.label(class_="form-label") }}{{ form.subcategory(class_="form-control form-control-brand") }}</div>
+      <div class="col-md-4">{{ form.frame_material.label(class_="form-label") }}{{ form.frame_material(class_="form-control form-control-brand") }}</div>
+      <div class="col-md-4">{{ form.frame_color.label(class_="form-label") }}{{ form.frame_color(class_="form-control form-control-brand") }}</div>
+      <div class="col-md-4">{{ form.delivery_time_days.label(class_="form-label") }}{{ form.delivery_time_days(class_="form-control form-control-brand") }}</div>
+
+      <div class="col-12">
+        {{ form.sizes.label(class_="form-label") }}
+        {% if form.sizes.choices %}
+        <div class="d-flex flex-wrap gap-3 p-3 card-brand">
+          {% for value, label in form.sizes.choices %}
+          <div class="form-check">
+            <input type="checkbox" name="sizes" value="{{ value }}" class="form-check-input"
+                   id="size-{{ value }}" {{ "checked" if value in (form.sizes.data or []) }}>
+            <label class="form-check-label" for="size-{{ value }}">{{ label }}</label>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="form-text">Tick every size this frame is offered in. Customers will pick one of these at checkout.</div>
+        {% else %}
+        <div class="text-muted small">No sizes have been added yet. Go to <a href="{{ url_for('admin.sizes') }}">Sizes</a> to add some first.</div>
+        {% endif %}
+      </div>
+
+      <div class="col-md-8">
+        {{ form.images.label(class_="form-label") }}{{ form.images(class_="form-control form-control-brand") }}
+        {% if product and product.images %}
+        <div class="d-flex gap-2 mt-2">
+          {% for img in product.images %}
+          <div class="position-relative">
+            <img src="{{ url_for('static', filename=img.image_path) }}" style="width:60px;height:60px;object-fit:cover;" class="rounded">
+            <button type="submit" form="delete-image-{{ img.id }}" class="btn btn-sm btn-danger py-0 px-1 position-absolute top-0 end-0" style="font-size:0.65rem;" title="Remove this image">×</button>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="col-12 d-flex flex-wrap gap-4 mt-2">
+        <div class="form-check">{{ form.is_available(class_="form-check-input") }}{{ form.is_available.label(class_="form-check-label") }}</div>
+        <div class="form-check">{{ form.is_featured(class_="form-check-input") }}{{ form.is_featured.label(class_="form-check-label") }}</div>
+        <div class="form-check">{{ form.is_new_arrival(class_="form-check-input") }}{{ form.is_new_arrival.label(class_="form-check-label") }}</div>
+        <div class="form-check">{{ form.is_best_seller(class_="form-check-input") }}{{ form.is_best_seller.label(class_="form-check-label") }}</div>
+        <div class="form-check">{{ form.is_clearance(class_="form-check-input") }}{{ form.is_clearance.label(class_="form-check-label") }}</div>
+        <div class="form-check">{{ form.is_customizable(class_="form-check-input") }}{{ form.is_customizable.label(class_="form-check-label") }}</div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary-brand mt-4">{{ "Save Changes" if product else "Create Product" }}</button>
+    <a href="{{ url_for('admin.products') }}" class="btn btn-outline-brand mt-4">Cancel</a>
+  </form>
+
+  <!-- Standalone delete-image forms, kept OUTSIDE the main form above.
+       HTML does not allow a <form> nested inside another <form> — browsers
+       silently break the DOM when that happens, which can push later
+       fields/buttons (like "Save Changes") outside the real form entirely.
+       These invisible forms are targeted by the × buttons above via the
+       HTML5 form="..." attribute instead, avoiding nesting altogether. -->
+  {% if product and product.images %}
+  {% for img in product.images %}
+  <form id="delete-image-{{ img.id }}" action="{{ url_for('admin.delete_product_image', image_id=img.id) }}" method="post" class="d-none">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  </form>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Customers</h2>
+<div class="card-brand p-3">
+  <table class="table table-brand">
+    <thead><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Joined</th><th>Verified</th></tr></thead>
+    <tbody>
+      {% for c in customers %}
+      <tr>
+        <td>{{ c.full_name }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.mobile }}</td>
+        <td>{{ c.created_at.strftime('%d %b %Y') }}</td>
+        <td>{% if c.email_verified %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-muted">No customers yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

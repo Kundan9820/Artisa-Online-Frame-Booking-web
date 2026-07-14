@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">{{ "Edit Category" if category else "Add Category" }}</h2>
+<div class="card-brand p-4" style="max-width:600px;">
+  <form method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.name.label(class_="form-label") }}{{ form.name(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.description.label(class_="form-label") }}{{ form.description(class_="form-control form-control-brand", rows=3) }}</div>
+    <div class="mb-3">{{ form.parent_id.label(class_="form-label") }}{{ form.parent_id(class_="form-select form-select-brand") }}</div>
+    <div class="mb-3">
+      {{ form.image.label(class_="form-label") }}{{ form.image(class_="form-control form-control-brand") }}
+      {% if category and category.image %}<img src="{{ url_for('static', filename=category.image) }}" class="mt-2 rounded" style="width:70px;height:70px;object-fit:cover;">{% endif %}
+    </div>
+    <div class="form-check mb-3">{{ form.is_active(class_="form-check-input") }}{{ form.is_active.label(class_="form-check-label") }}</div>
+    <button type="submit" class="btn btn-primary-brand">{{ "Save Changes" if category else "Create Category" }}</button>
+    <a href="{{ url_for('admin.categories') }}" class="btn btn-outline-brand">Cancel</a>
+  </form>
+</div>
+{% endblock %}

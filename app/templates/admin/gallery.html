@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Shop Gallery</h2>
+  <a href="{{ url_for('admin.add_gallery_image') }}" class="btn btn-primary-brand">+ Add Photo</a>
+</div>
+<p class="text-muted">These photos appear in the "Visit Our Shop" gallery on the Contact page. Upload real photos of your shop front, workshop, and finished work — customers trust seeing the real place.</p>
+
+<div class="row g-3">
+  {% for img in images %}
+  <div class="col-md-3 col-6">
+    <div class="card-brand p-2">
+      <img src="{{ url_for('static', filename=img.image) }}" style="width:100%; aspect-ratio:1/1; object-fit:cover;" class="rounded mb-2">
+      {% if img.caption %}<p class="small mb-1">{{ img.caption }}</p>{% endif %}
+      <p class="small mb-2">{% if img.is_active %}<span class="badge bg-success">Visible</span>{% else %}<span class="badge bg-secondary">Hidden</span>{% endif %}</p>
+      <form action="{{ url_for('admin.delete_gallery_image', image_id=img.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-sm btn-outline-danger w-100">Delete</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <p class="text-muted">No shop photos yet. Add a few real photos of your shop front, workshop, or team!</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Checkout — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="section-title"><h2>Checkout</h2></div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card-brand p-4">
+        <h5 class="mb-3">Delivery Address</h5>
+
+        {% if addresses %}
+        <div class="mb-3">
+          <label class="form-label small">Use a saved address</label>
+          <select class="form-select form-select-brand" id="savedAddressSelect" onchange="fillAddress(this)">
+            <option value="">-- Enter new address below --</option>
+            {% for a in addresses %}
+            <option value='{{ a.id }}'
+              data-name="{{ a.full_name }}" data-mobile="{{ a.mobile }}" data-email="{{ a.email or '' }}"
+              data-address="{{ a.address_line }}" data-city="{{ a.city }}" data-state="{{ a.state }}"
+              data-pincode="{{ a.pincode }}" data-landmark="{{ a.landmark or '' }}">
+              {{ a.full_name }} - {{ a.city }}, {{ a.pincode }} {{ "(Default)" if a.is_default }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+
+        <form method="post" id="checkoutForm">
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-6">{{ form.full_name.label(class_="form-label") }}{{ form.full_name(class_="form-control form-control-brand") }}</div>
+            <div class="col-md-6">{{ form.mobile.label(class_="form-label") }}{{ form.mobile(class_="form-control form-control-brand") }}</div>
+            <div class="col-md-12">{{ form.email.label(class_="form-label") }}{{ form.email(class_="form-control form-control-brand") }}</div>
+            <div class="col-12">{{ form.address_line.label(class_="form-label") }}{{ form.address_line(class_="form-control form-control-brand", rows=2) }}</div>
+            <div class="col-md-4">{{ form.city.label(class_="form-label") }}{{ form.city(class_="form-control form-control-brand") }}</div>
+            <div class="col-md-4">{{ form.state.label(class_="form-label") }}{{ form.state(class_="form-control form-control-brand") }}</div>
+            <div class="col-md-4">{{ form.pincode.label(class_="form-label") }}{{ form.pincode(class_="form-control form-control-brand") }}</div>
+            <div class="col-md-8">{{ form.landmark.label(class_="form-label") }}{{ form.landmark(class_="form-control form-control-brand") }}</div>
+            <div class="col-md-4 d-flex align-items-end">
+              <div class="form-check">{{ form.is_default(class_="form-check-input") }}{{ form.is_default.label(class_="form-check-label") }}</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Special Instructions (optional)</label>
+              <textarea name="special_instructions" class="form-control form-control-brand" rows="2" placeholder="e.g. Deliver after 5 PM"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary-brand w-100 mt-4">
+            <i class="bi bi-whatsapp me-1"></i>Place Order via WhatsApp
+          </button>
+          <p class="small text-muted mt-2">You'll be redirected to WhatsApp with your order details pre-filled. Just hit send!</p>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card-brand p-4">
+        <h5 class="mb-3">Order Items</h5>
+        {% for item in items %}
+        <div class="d-flex justify-content-between small mb-2">
+          <span>{{ item.product.name }} {% if item.size_label %}({{ item.size_label }}){% endif %} x{{ item.quantity }}</span>
+          <span>₹{{ "%.0f"|format(item.subtotal) }}</span>
+        </div>
+        {% endfor %}
+        <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-2">
+          <span>Total</span>
+          <span>₹{{ "%.0f"|format(items|sum(attribute='subtotal')) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function fillAddress(sel) {
+  var opt = sel.options[sel.selectedIndex];
+  if (!opt.value) return;
+  document.getElementsByName("full_name")[0].value = opt.dataset.name;
+  document.getElementsByName("mobile")[0].value = opt.dataset.mobile;
+  document.getElementsByName("email")[0].value = opt.dataset.email;
+  document.getElementsByName("address_line")[0].value = opt.dataset.address;
+  document.getElementsByName("city")[0].value = opt.dataset.city;
+  document.getElementsByName("state")[0].value = opt.dataset.state;
+  document.getElementsByName("pincode")[0].value = opt.dataset.pincode;
+  document.getElementsByName("landmark")[0].value = opt.dataset.landmark;
+}
+</script>
+{% endblock %}

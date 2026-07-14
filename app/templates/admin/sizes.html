@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Sizes</h2>
+
+<div class="row g-4">
+  <div class="col-md-5">
+    <div class="card-brand p-3">
+      <h5>Add New Size</h5>
+      <form method="post">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">{{ form.label.label(class_="form-label") }}{{ form.label(class_="form-control form-control-brand") }}</div>
+        <div class="form-check mb-3">{{ form.is_custom(class_="form-check-input") }}{{ form.is_custom.label(class_="form-check-label") }}</div>
+        <button type="submit" class="btn btn-primary-brand w-100">Add Size</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <div class="card-brand p-3">
+      <table class="table table-brand">
+        <thead><tr><th>Label</th><th>Custom?</th><th></th></tr></thead>
+        <tbody>
+          {% for s in sizes %}
+          <tr>
+            <td>{{ s.label }}</td>
+            <td>{{ "Yes" if s.is_custom else "No" }}</td>
+            <td>
+              <form action="{{ url_for('admin.delete_size', size_id=s.id) }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3" class="text-muted">No sizes added yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

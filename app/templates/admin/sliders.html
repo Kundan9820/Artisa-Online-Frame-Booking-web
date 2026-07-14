@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Homepage Slider</h2>
+  <a href="{{ url_for('admin.add_slider') }}" class="btn btn-primary-brand">+ Add Slide</a>
+</div>
+<div class="row g-3">
+  {% for s in sliders %}
+  <div class="col-md-4">
+    <div class="card-brand p-2">
+      <img src="{{ url_for('static', filename=s.image) }}" style="width:100%; aspect-ratio:16/9; object-fit:cover;" class="rounded mb-2">
+      <p class="mb-1"><strong>{{ s.title or "Untitled" }}</strong></p>
+      <p class="small text-muted mb-2">{{ s.subtitle }}</p>
+      <form action="{{ url_for('admin.delete_slider', slider_id=s.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-sm btn-outline-danger w-100">Delete</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <p class="text-muted">No slides yet. The homepage will show a default hero until you add one.</p>
+  {% endfor %}
+</div>
+{% endblock %}

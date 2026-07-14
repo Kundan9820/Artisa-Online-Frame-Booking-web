@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Add Shop Photo</h2>
+<div class="card-brand p-4" style="max-width:500px;">
+  <form method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.image.label(class_="form-label") }}{{ form.image(class_="form-control form-control-brand") }}</div>
+    <div class="mb-3">{{ form.caption.label(class_="form-label") }}{{ form.caption(class_="form-control form-control-brand") }}</div>
+    <div class="form-check mb-3">{{ form.is_active(class_="form-check-input") }}{{ form.is_active.label(class_="form-check-label") }}</div>
+    <button type="submit" class="btn btn-primary-brand">Add Photo</button>
+    <a href="{{ url_for('admin.gallery') }}" class="btn btn-outline-brand">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Contact Us — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="section-title"><h2>Contact Us</h2></div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card-brand p-4 mb-3">
+        <h5>Get in Touch</h5>
+        <p><i class="bi bi-geo-alt me-2"></i>{{ site.address }}</p>
+        <p><i class="bi bi-telephone me-2"></i><a href="tel:+{{ site.whatsapp_number }}">+{{ site.whatsapp_number }}</a></p>
+        <p><i class="bi bi-whatsapp me-2"></i><a href="https://wa.me/{{ site.whatsapp_number }}" target="_blank" rel="noopener">Chat on WhatsApp</a></p>
+        <p><i class="bi bi-instagram me-2"></i><a href="{{ site.instagram_url }}" target="_blank" rel="noopener">@artistaframe</a></p>
+        <p><i class="bi bi-clock me-2"></i>{{ site.business_hours }}</p>
+        {% if site.google_maps_url %}
+        <a href="{{ site.google_maps_url }}" target="_blank" rel="noopener" class="btn btn-outline-brand btn-sm mt-2">
+          <i class="bi bi-map me-1"></i>Get Directions
+        </a>
+        {% endif %}
+      </div>
+      <div class="card-brand overflow-hidden" style="height:300px;">
+        {% if site.shop_latitude and site.shop_longitude %}
+        <iframe
+          src="https://www.google.com/maps?q={{ site.shop_latitude }},{{ site.shop_longitude }}&hl=en&z=16&output=embed"
+          width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+        {% else %}
+        <iframe
+          src="https://www.google.com/maps?q={{ site.address | urlencode }}&output=embed"
+          width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card-brand p-4">
+        <h5>Send Us a Message</h5>
+        <form method="post">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">{{ form.name.label(class_="form-label") }}{{ form.name(class_="form-control form-control-brand") }}</div>
+          <div class="mb-3">{{ form.email.label(class_="form-label") }}{{ form.email(class_="form-control form-control-brand") }}</div>
+          <div class="mb-3">{{ form.mobile.label(class_="form-label") }}{{ form.mobile(class_="form-control form-control-brand") }}</div>
+          <div class="mb-3">{{ form.message.label(class_="form-label") }}{{ form.message(class_="form-control form-control-brand", rows=4) }}</div>
+          <button type="submit" class="btn btn-primary-brand w-100">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shop Photo Gallery -->
+  <div class="mt-5">
+    <div class="section-title frame-corner">
+      <span class="eyebrow">Come See Us</span>
+      <h2>Visit Our Shop</h2>
+    </div>
+    {% if gallery_images %}
+    <div class="row g-3">
+      {% for img in gallery_images %}
+      <div class="col-6 col-md-3">
+        <div class="card-brand overflow-hidden" style="aspect-ratio:1/1;">
+          <img src="{{ url_for('static', filename=img.image) }}" alt="{{ img.caption or site.shop_name }}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
+        </div>
+        {% if img.caption %}<p class="small text-muted mt-1 mb-0">{{ img.caption }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="card-brand p-4 text-center">
+      <p class="text-muted mb-0">Shop photos coming soon — the owner can add them anytime from the admin panel.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

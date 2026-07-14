@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.order_number }} — {{ site.shop_name }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="card-brand p-4 mx-auto" style="max-width:640px;">
+    <div class="text-center mb-4">
+      <i class="bi bi-check-circle text-brand-teal" style="font-size:2.6rem;"></i>
+      <h2 class="mt-2">{{ "Order Status" if tracking else "Order Received!" }}</h2>
+      <p class="text-muted">Order Number: <strong>{{ order.order_number }}</strong></p>
+    </div>
+
+    <div class="mb-3">
+      <span class="status-pill {{ order.status }}">{{ order.status }}</span>
+    </div>
+
+    <table class="table table-brand">
+      <tbody>
+        {% for item in order.items %}
+        <tr>
+          <td>{{ item.product_name }}{% if item.size_label %} ({{ item.size_label }}){% endif %} x{{ item.quantity }}</td>
+          <td class="text-end">₹{{ "%.0f"|format(item.unit_price|float * item.quantity) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="fw-bold"><td>Total</td><td class="text-end">₹{{ "%.0f"|format(order.total_amount) }}</td></tr>
+      </tbody>
+    </table>
+
+    <p class="small text-muted mb-0">Delivering to: {{ order.address_line }}, {{ order.city }}, {{ order.state }} - {{ order.pincode }}</p>
+    <p class="small text-muted">Our team will confirm your order over WhatsApp shortly.</p>
+    <a href="{{ url_for('main.home') }}" class="btn btn-outline-brand w-100 mt-3">Continue Shopping</a>
+  </div>
+</div>
+{% endblock %}

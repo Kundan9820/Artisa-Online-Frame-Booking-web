@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h2 class="mb-4">Reviews</h2>
+<div class="card-brand p-3">
+  <table class="table table-brand align-middle">
+    <thead><tr><th>Product</th><th>Customer</th><th>Rating</th><th>Comment</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for r in reviews %}
+      <tr>
+        <td>{{ r.product.name }}</td>
+        <td>{{ r.user.full_name }}</td>
+        <td>{{ "★" * r.rating }}</td>
+        <td class="small">{{ r.comment }}</td>
+        <td>{% if r.is_approved %}<span class="badge bg-success">Approved</span>{% else %}<span class="badge bg-warning text-dark">Pending</span>{% endif %}</td>
+        <td class="d-flex gap-1">
+          {% if not r.is_approved %}
+          <form action="{{ url_for('admin.approve_review', review_id=r.id) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-primary-brand">Approve</button>
+          </form>
+          {% endif %}
+          <form action="{{ url_for('admin.delete_review', review_id=r.id) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-muted">No reviews yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
